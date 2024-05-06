@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import Web3 from "web3";
 import {DataContext} from './context/DataContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Test from './components/Test'; // assuming Test component is in the same directory
-// import "./App.css";
-import SimpleStorage from "./contracts/SimpleStorage.json";
+import Test from './components/sellArticle';
+import "./App.css";
+// import SimpleStorage from "./contracts/SimpleStorage.json";
 import ChainList from "./contracts/ChainList.json";
 
 function App() {
+  // let web3 = new Web3()
   const [state, setState] = useState({ contract: null, web3: null });
   const [data, setData] = useState({
     add: null,
@@ -30,9 +31,13 @@ function App() {
         setState({ contract: instance, web3: web3 });
         // console.log(instance)
         var getArticle = await instance.methods.getArticle().call();
+        
+        // console.log("In Wei",in_wei)
+        const price_in_eth = web3.utils.fromWei(getArticle[3], "ether");
+        // console.log("In Ethers",price_in_eth)
         setData({
           add: getArticle[0],
-          price: getArticle[3],
+          price: price_in_eth.toString(),
           name: getArticle[1],
           desc: getArticle[2],
         });
@@ -53,27 +58,26 @@ function App() {
     if (contract) {
       await contract.methods
         .sellArticle(
-          "Macbook Pro 2021",
-          "to buy 2 Ethers",
-          web3.utils.toWei("10", "ether")
+          "2 BHK Flat in Noida",
+          "to buy 50 Ethers",
+          web3.utils.toWei(100, "ether")
         )
         .send({ from: "0xa078a34cc63eB2BAA551Ea76e231aEf08d17E32f" ,gas: 5000000});
         // setData(real_data)
     }
     window.location.reload();
   };
+  
   return(
-    <DataContext.Provider value={state.contract}>
-      
+    <DataContext.Provider value={state.contract}>      
         <button onClick={writeData}>Click Me to Update</button>
         <p>{data.add} ,{data.desc} ,
-        {data.price && data.price.toString()}, {data.name} </p>
+        {data.price && data.price} (ETH), {data.name} </p>
         <Router>
           <Routes>
-          <Route path="/test" element={<Test/>}/>
+          <Route path="/sell-article" element={<Test/>}/>
           </Routes>
-        </Router>
-        {/* <Test/> */}
+        </Router>        
     </DataContext.Provider>
   )
 }

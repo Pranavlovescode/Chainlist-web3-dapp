@@ -4,9 +4,9 @@ const Test = () => {
     const data = useContext(DataContext)
     console.log(data)
   return (
-    <div>
-      {data}
-    </div>
+    <>
+      <h1>Sell Article Page</h1>
+    </>
   )
 }
 

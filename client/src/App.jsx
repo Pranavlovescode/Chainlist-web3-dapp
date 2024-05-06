@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import Web3 from "web3";
+import {DataContext} from './context/DataContext'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Test from './components/Test'; // assuming Test component is in the same directory
 // import "./App.css";
 import SimpleStorage from "./contracts/SimpleStorage.json";
 import ChainList from "./contracts/ChainList.json";
@@ -50,9 +53,9 @@ function App() {
     if (contract) {
       await contract.methods
         .sellArticle(
-          "Iphone 15 Pro Max",
-          "to buy New Iphone 15 Pro Max",
-          web3.utils.toWei("1.5", "ether")
+          "Macbook Pro 2021",
+          "to buy 2 Ethers",
+          web3.utils.toWei("10", "ether")
         )
         .send({ from: "0xa078a34cc63eB2BAA551Ea76e231aEf08d17E32f" ,gas: 5000000});
         // setData(real_data)
@@ -60,11 +63,18 @@ function App() {
     window.location.reload();
   };
   return(
-    <>
+    <DataContext.Provider value={state.contract}>
+      
         <button onClick={writeData}>Click Me to Update</button>
         <p>{data.add} ,{data.desc} ,
         {data.price && data.price.toString()}, {data.name} </p>
-    </>
+        <Router>
+          <Routes>
+          <Route path="/test" element={<Test/>}/>
+          </Routes>
+        </Router>
+        {/* <Test/> */}
+    </DataContext.Provider>
   )
 }
 

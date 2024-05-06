@@ -3,6 +3,7 @@ import Web3 from "web3";
 import {DataContext} from './context/DataContext'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Test from './components/sellArticle';
+import GetArticle from "./components/getArticle";
 import "./App.css";
 // import SimpleStorage from "./contracts/SimpleStorage.json";
 import ChainList from "./contracts/ChainList.json";
@@ -10,12 +11,7 @@ import ChainList from "./contracts/ChainList.json";
 function App() {
   // let web3 = new Web3()
   const [state, setState] = useState({ contract: null, web3: null });
-  const [data, setData] = useState({
-    add: null,
-    price: null,
-    name: null,
-    desc: null,
-  });
+  
   useEffect(() => {
     const funcInteract = async () => {
       try {
@@ -30,19 +26,7 @@ function App() {
         // console.log(networkId)
         setState({ contract: instance, web3: web3 });
         // console.log(instance)
-        var getArticle = await instance.methods.getArticle().call();
         
-        // console.log("In Wei",in_wei)
-        const price_in_eth = web3.utils.fromWei(getArticle[3], "ether");
-        // console.log("In Ethers",price_in_eth)
-        setData({
-          add: getArticle[0],
-          price: price_in_eth.toString(),
-          name: getArticle[1],
-          desc: getArticle[2],
-        });
-        // setData(getArticle);
-        console.log(getArticle);
       } catch (error) {
         console.error(error);
       }
@@ -70,12 +54,11 @@ function App() {
   
   return(
     <DataContext.Provider value={state.contract}>      
-        <button onClick={writeData}>Click Me to Update</button>
-        <p>{data.add} ,{data.desc} ,
-        {data.price && data.price} (ETH), {data.name} </p>
+        
         <Router>
           <Routes>
           <Route path="/sell-article" element={<Test/>}/>
+          <Route path="/get-article" element={<GetArticle/>}/>
           </Routes>
         </Router>        
     </DataContext.Provider>

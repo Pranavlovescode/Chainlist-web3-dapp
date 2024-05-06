@@ -5,7 +5,7 @@ const Test = () => {
     console.log(data)
   return (
     <>
-      <h1>Sell Article Page</h1>
+      <h1 className='font-bold'>Sell Article Page</h1>
     </>
   )
 }

@@ -1,17 +1,22 @@
 import { useEffect, useState } from "react";
 import Web3 from "web3";
-import {DataContext} from './context/DataContext'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Test from './components/sellArticle';
+import { DataContext } from "./context/DataContext";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import SellArticle from "./components/sellArticle";
 import GetArticle from "./components/getArticle";
 import "./App.css";
 // import SimpleStorage from "./contracts/SimpleStorage.json";
 import ChainList from "./contracts/ChainList.json";
 
 function App() {
-  // let web3 = new Web3()
+  let web3 = new Web3();
   const [state, setState] = useState({ contract: null, web3: null });
-  
+  const [sellData, setSellData] = useState({
+    add: null,
+    price: null,
+    name: null,
+    desc: null,
+  });
   useEffect(() => {
     const funcInteract = async () => {
       try {
@@ -25,8 +30,7 @@ function App() {
         // console.log(ChainList.networks[networkId])
         // console.log(networkId)
         setState({ contract: instance, web3: web3 });
-        // console.log(instance)
-        
+        console.log(instance);
       } catch (error) {
         console.error(error);
       }
@@ -35,37 +39,32 @@ function App() {
   }, []);
   useEffect(() => {
     // console.log(state)
-    
+    getArticle();
   }, [state]);
-  const writeData = async () => {
-    const { contract, web3 } = state;
-    if (contract) {
-      await contract.methods
-        .sellArticle(
-          "2 BHK Flat in Noida",
-          "to buy 50 Ethers",
-          web3.utils.toWei(100, "ether")
-        )
-        .send({ from: "0xa078a34cc63eB2BAA551Ea76e231aEf08d17E32f" ,gas: 5000000});
-        // setData(real_data)
-    }
-    window.location.reload();
+  const getArticle = async () => {
+    const result = await state.contract.methods.getArticle().call();
+    const priceToEther = web3.utils.fromWei(result[3], "ether");
+    setSellData({
+      add: result[0],
+      desc: result[2],
+      price: priceToEther,
+      name: result[1],
+    });
+    console.log(result);
   };
   
-  return(
-    <DataContext.Provider value={state.contract}>      
-        
-        <Router>
-          <Routes>
-          <Route path="/sell-article" element={<Test/>}/>
-          <Route path="/get-article" element={<GetArticle/>}/>
-          </Routes>
-        </Router>        
+
+  return (
+    <DataContext.Provider value={state.contract}>
+      <Router>
+        <h1 className="font-bold p-3 my-5">ChainList Crypto Market</h1>
+        <Routes>
+          <Route path="/sell-article" element={<SellArticle />} />
+          <Route path="/" element={<GetArticle />} />
+        </Routes>
+      </Router>
     </DataContext.Provider>
-  )
+  );
 }
-
-
-
 
 export default App;

@@ -17,11 +17,14 @@ function App() {
     name: null,
     desc: null,
   });
+
   useEffect(() => {
     const funcInteract = async () => {
       try {
         const web3 = new Web3("http://localhost:8545");
         const networkId = await web3.eth.net.getId();
+        // const coinbase=await web3.eth.getCoinbase()
+        // console.log('coinbase',coinbase)
         var deployedNetwork = ChainList.networks[networkId];
         var instance = new web3.eth.Contract(
           ChainList.abi,
@@ -42,7 +45,8 @@ function App() {
     getArticle();
   }, [state]);
   const getArticle = async () => {
-    const result = await state.contract.methods.getArticle().call();
+    const temp = state.contract;
+    const result = await temp.methods.getArticle().call();
     const priceToEther = web3.utils.fromWei(result[3], "ether");
     setSellData({
       add: result[0],

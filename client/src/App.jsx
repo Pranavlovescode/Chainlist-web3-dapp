@@ -42,7 +42,7 @@ function App() {
   }, []);
   useEffect(() => {
     // console.log(state)
-    getArticle();
+    // getArticle();
   }, [state]);
   const getArticle = async () => {
     const temp = state.contract;
@@ -54,7 +54,7 @@ function App() {
       price: priceToEther,
       name: result[1],
     });
-    console.log(result);
+    // console.log(result);
   };
   
 

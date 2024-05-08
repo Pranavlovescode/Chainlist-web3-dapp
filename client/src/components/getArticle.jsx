@@ -2,43 +2,45 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Web3 from "web3";
 import { DataContext } from "../context/DataContext";
+
 const getArticle = () => {
   const get_data = useContext(DataContext);
   const web3 = new Web3();
   console.log("DataContext", get_data);
-//   web3.eth.getCoinbase().then(console.log);
-//   web3.eth.getAccounts([2]).then(console.log);
-  const [data, setData] = useState({
-    name: null,
-    desc: null,
-    price: null,
-    seller_add: null,
-    buyer_add: null,
+  const [data, setData] = useState([]);
 
-  });
   const getArticleFunc = async () => {
     if (get_data) {
-      const result = await get_data.methods.getArticle().call();
-      const priceToEther = web3.utils.fromWei(result[4], "ether");
-      setData({
-        seller_add: result[0],
-        buyer_add: result[1],
-        desc: result[3],
-        price: priceToEther,
-        name: result[2],
-      });
-      console.log("Result after reading getArticle()", result);
+      const articleIds = await get_data.methods.getArticlesForSale().call();
+      if (articleIds.length === 0) {
+        console.log("No articles for sale");
+        return;
+      }
+      console.log(articleIds);
+      const articles = await Promise.all(
+        articleIds.map((id) => get_data.methods.articles(id).call())
+      );
+      console.log(articles);
+      setData(
+        articles.map((article) => ({
+          seller_add: article[1],
+          buyer_add: article[2],
+          desc: article[4],
+          price: web3.utils.fromWei(article[5], "ether"),
+          name: article[3],
+        }))
+      );
     }
   };
+
   useEffect(() => {
     getArticleFunc();
   }, [get_data]);
+
+  console.log(data);
+
   return (
     <>
-      {/* <button onClick={getArticle}>Click Me to Update</button> */}
-      {/* <p classNameName="pb-4 ">
-         , ,, 
-      </p> */}
       <section className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
         <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
           <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
@@ -67,63 +69,38 @@ const getArticle = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b dark:border-gray-700">
-                    <th
-                      scope="row"
-                      className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {data.name}
-                    </th>
-                    <td className="px-4 py-3">{data.desc}</td>
-                    <td className="px-4 py-3">{data.price} (ETH)</td>
-                    <td className="px-4 py-3">{data.seller_add}</td>
-                    {data.buyer_add === "0x0000000000000000000000000000000000000000" ?<td className="px-4 py-3">No Buyer yet</td> : <td className="px-4 py-3">{data.buyer_add}</td>}                    
-                    <td className="px-4 py-3 flex items-center justify-start">
-                        {data.buyer_add === "0x0000000000000000000000000000000000000000"?(<button
-                        className="text-white bg-primary-600  hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                        type="button"
+                  {data.map((article) => (
+                    <tr className="border-b dark:border-gray-700">
+                      <th
+                        scope="row"
+                        className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        Buy
-                      </button>):(
-                        <p>No action</p>
+                        {article.name}
+                      </th>
+                      <td className="px-4 py-3">{article.desc}</td>
+                      <td className="px-4 py-3">{article.price} (ETH)</td>
+                      <td className="px-4 py-3">{article.seller_add}</td>
+                      {article.buyer_add ===
+                      "0x0000000000000000000000000000000000000000" ? (
+                        <td className="px-4 py-3">No Buyer yet</td>
+                      ) : (
+                        <td className="px-4 py-3">{article.buyer_add}</td>
                       )}
-                      
-                      <div
-                        id="apple-imac-27-dropdown"
-                        className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-                      >
-                        <ul
-                          className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                          aria-labelledby="apple-imac-27-dropdown-button"
-                        >
-                          <li>
-                            <a
-                              href="#"
-                              className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                              Show
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              href="#"
-                              className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                              Edit
-                            </a>
-                          </li>
-                        </ul>
-                        <div className="py-1">
-                          <a
-                            href="#"
-                            className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                      <td className="px-4 py-3 flex items-center justify-start">
+                        {article.buyer_add ===
+                        "0x0000000000000000000000000000000000000000" ? (
+                          <button
+                            className="text-white bg-primary-600  hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                            type="button"
                           >
-                            Delete
-                          </a>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
+                            Buy
+                          </button>
+                        ) : (
+                          <p>No action</p>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

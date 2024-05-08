@@ -41,7 +41,7 @@ contract ChainList {
         uint[] memory artileId = new uint[](articleCounter);
         uint numberOfArticlesForSale = 0;
         // iterate over articles
-        for (uint i = 0; i < articleCounter; i++) {
+        for (uint i = 1; i <= articleCounter; i++) {
             if (articles[i].buyer == address(0x0)) {
                 artileId[numberOfArticlesForSale] = articles[i].id;
                 numberOfArticlesForSale++;

@@ -77,7 +77,7 @@ const getArticle = () => {
                     <td className="px-4 py-3">{data.desc}</td>
                     <td className="px-4 py-3">{data.price} (ETH)</td>
                     <td className="px-4 py-3">{data.seller_add}</td>
-                    <td className="px-4 py-3">{data.buyer_add}</td>
+                    {data.buyer_add === "0x0000000000000000000000000000000000000000" ?<td className="px-4 py-3">No Buyer yet</td> : <td className="px-4 py-3">{data.buyer_add}</td>}                    
                     <td className="px-4 py-3 flex items-center justify-start">
                         {data.buyer_add === "0x0000000000000000000000000000000000000000"?(<button
                         className="text-white bg-primary-600  hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"

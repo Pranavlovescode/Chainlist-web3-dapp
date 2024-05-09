@@ -41,7 +41,7 @@ const getArticle = () => {
 
   return (
     <>
-      <section className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+      <section className="bg-gray-50 dark:bg-gray-900 my-10 sm:p-5">
         <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
           <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div className="overflow-x-auto">

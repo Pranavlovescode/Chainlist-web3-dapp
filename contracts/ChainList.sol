@@ -37,33 +37,31 @@ contract ChainList {
 
     // Function to get the array of articles which are still for sale
     function getArticlesForSale() public view returns (uint[] memory){
-        // prepare putput array
-        uint[] memory artileId = new uint[](articleCounter);
-        uint numberOfArticlesForSale = 0;
-        // iterate over articles
-        for (uint i = 1; i <= articleCounter; i++) {
-            if (articles[i].buyer == address(0x0)) {
-                artileId[numberOfArticlesForSale] = articles[i].id;
-                numberOfArticlesForSale++;
-            }
-        }
+    // prepare output array
+    uint[] memory articleIds = new uint[](articleCounter);
 
-        // copy the articleId array into a smaller forSale array
-        uint[] memory forSale = new uint[](numberOfArticlesForSale);
-        for (uint i = 0; i < numberOfArticlesForSale; i++) {
-            forSale[i] = artileId[i];
-        }
-        return forSale;
+    // iterate over articles
+    for (uint i = 0; i < articleCounter; i++) {
+       articleIds[i] = articles[i + 1].id; // Adjust index to start from 0
     }
 
-    function getArticle() public pure returns (
+    return articleIds;
+}
+
+    function getArticle() public view returns (
         address _seller,
         address _buyer,
         string memory _name,
         string memory _description,
         uint256 _price
     ) {
-        return (_seller, _buyer,_name, _description, _price);
+        address seller = articles[1].seller;
+        address buyer = articles[2].buyer;
+        string memory name = articles[3].name;
+        string memory description = articles[4].description;
+        uint256 price = articles[5].price;
+        
+        return (seller, buyer,name, description, price);
     }
 
     // Function to buy an article

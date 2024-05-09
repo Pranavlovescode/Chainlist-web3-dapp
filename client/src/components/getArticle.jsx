@@ -12,6 +12,7 @@ const getArticle = () => {
   // console.log("DataContext", get_data);
   const [data, setData] = useState([]);
   const [balance, setBalance] = useState(0);
+  const [recipt, setRecipt] = useState([]);
   // Debugging purposes
   // const filteredData = data.filter((index) => index.sender_add !== id);
   // console.log("filteredData:", filteredData);
@@ -44,7 +45,24 @@ const getArticle = () => {
       );
     }
   };
+  const buyArticle = async (id) => {
+    console.log(data[id - 1].price);
+    console.log(add);
+    const transaction = await get_data.methods.buyArticle(id).send({
+      from: add,
+      gas: 5000000,
+      value: web3.utils.toWei(data[id - 1].price, "ether"),
+    });
+    setRecipt(transaction);
+    alert("Article has been bought successfully");
+    console.log(recipt);
+    window.location.reload();
+    // if (data && data.price) {
 
+    // } else {
+    //   console.error("data or data.price is not defined");
+    // }
+  };
   const getBalance = async () => {
     const bal = await web3.eth.getBalance(add);
     const to_ether = web3.utils.fromWei(bal, "ether");
@@ -52,10 +70,9 @@ const getArticle = () => {
     // window.location.reload();
     return to_ether;
   };
-  getBalance()
+  getBalance();
   useEffect(() => {
     getArticleFunc();
-    
   }, [get_data, balance]);
 
   // console.log(data);
@@ -68,8 +85,12 @@ const getArticle = () => {
             <h1 className="font-bold  text-2xl">Articles for Sale</h1>
           </div>
           <div className="w-25">
-            <p><span>Your Address</span> : {add}</p>
-            <p><span>Your Balance</span> : {balance} (ETH)</p>
+            <p>
+              <span>Your Address</span> : {add} (You)
+            </p>
+            <p>
+              <span>Your Balance</span> : {balance} (ETH)
+            </p>
           </div>
         </section>
         <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
@@ -88,7 +109,7 @@ const getArticle = () => {
                       Price
                     </th>
                     <th scope="col" className="px-4 py-3">
-                      Address of Sender
+                      Address of Seller
                     </th>
                     <th scope="col" className="px-4 py-3">
                       Address of Buyer
@@ -99,10 +120,10 @@ const getArticle = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data
-                    .filter((index) => index.seller_add !== add)
-                    .map((article) => (
-                      <tr className="border-b dark:border-gray-700">
+                  {data.map((article, num) => {
+                    console.log(num);
+                    return (
+                      <tr key={num} className="border-b dark:border-gray-700">
                         <th
                           scope="row"
                           className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -111,29 +132,40 @@ const getArticle = () => {
                         </th>
                         <td className="px-4 py-3">{article.desc}</td>
                         <td className="px-4 py-3">{article.price} (ETH)</td>
-                        <td className="px-4 py-3">{article.seller_add}</td>
-                        {article.buyer_add ===
-                        "0x0000000000000000000000000000000000000000" ? (
+                        {article.seller_add === add ? (
+                          <td className="px-4 py-3">You</td>
+                        ) : (
+                          <td className="px-4 py-3">{article.seller_add}</td>
+                        )}
+                        {article.buyer_add === add ? (
+                          <td className="px-4 py-3">You</td>
+                        ) : article.buyer_add ===
+                          "0x0000000000000000000000000000000000000000" ? (
                           <td className="px-4 py-3">No Buyer yet</td>
                         ) : (
                           <td className="px-4 py-3">{article.buyer_add}</td>
                         )}
+
                         <td className="px-4 py-3 flex items-center justify-start">
-                          {article.buyer_add ===
+                          {article.buyer_add !==
                           "0x0000000000000000000000000000000000000000" ? (
+                            <p>No action</p>
+                          ) : article.seller_add === add ? (
+                            <p>You cannot buy this Article</p>
+                          ) : (
                             <button
+                              onClick={() => buyArticle(num + 1)}
                               className="text-white bg-primary-600  hover:bg-blue-500 ease-in-out 
             duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                               type="button"
                             >
                               Buy
                             </button>
-                          ) : (
-                            <p>No action</p>
                           )}
                         </td>
                       </tr>
-                    ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

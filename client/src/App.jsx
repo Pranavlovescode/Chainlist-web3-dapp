@@ -13,10 +13,10 @@ function App() {
   const [state, setState] = useState({ contract: null, web3: null });
   const [acc, setAcc] = useState([]);
 
-  // const getAllAccounts = async () => {
-  //   const accounts = await web3.eth.getAccounts();
-  //   setAcc(accounts);
-  // };
+  const getAllAccounts = async () => {
+    const accounts = await web3.eth.getAccounts();
+    setAcc(accounts);
+  };
 
   useEffect(() => {
     const funcInteract = async () => {
@@ -32,7 +32,7 @@ function App() {
         // console.log(ChainList.networks[networkId])
         // console.log(networkId)
         setState({ contract: instance, web3: web3 });
-        console.log(instance);
+        // console.log(instance);
       } catch (error) {
         console.error(error);
       }
@@ -40,7 +40,7 @@ function App() {
     funcInteract();
   }, []);
   useEffect(() => {
-    // getAllAccounts();
+    getAllAccounts();
   }, [state]);
 
   return (
@@ -48,8 +48,9 @@ function App() {
       <Router>
         <Navbar/>
         <Routes>
-          <Route path="/sell-article" element={<SellArticle />} />
-          <Route path="/" element={<GetArticle />} />
+          <Route path="/:id/sell-article" element={<SellArticle />} />
+          <Route path="/" element={<GetArticle />} />          
+          <Route path='/:id' element={<GetArticle />} />
         </Routes>
       </Router>
     </DataContext.Provider>

@@ -1,14 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Web3 from "web3";
 import { DataContext } from "../context/DataContext";
 
 const getArticle = () => {
   const get_data = useContext(DataContext);
-  const web3 = new Web3();
-  console.log("DataContext", get_data);
+  const location = useLocation();
+  const add = location.pathname.split("/")[1];
+  // console.log(id);
+  const web3 = new Web3("http://localhost:8545");
+  // console.log("DataContext", get_data);
   const [data, setData] = useState([]);
-
+  const [balance, setBalance] = useState(0);
+  // Debugging purposes
+  // const filteredData = data.filter((index) => index.sender_add !== id);
+  // console.log("filteredData:", filteredData);
+  // const tableRows = filteredData.map((index) => {
+  //   console.log("Checking:", index.seller_add, id);
+  //   return index.sender_add !== id;
+  // })
+  // console.log('tableRows:', tableRows);
   const getArticleFunc = async () => {
     if (get_data) {
       const articleIds = await get_data.methods.getArticlesForSale().call();
@@ -16,11 +27,12 @@ const getArticle = () => {
         console.log("No articles for sale");
         return;
       }
-      console.log(articleIds);
+      // console.log(articleIds);
       const articles = await Promise.all(
         articleIds.map((id) => get_data.methods.articles(id).call())
       );
-      console.log(articles);
+      // console.log(articles);
+
       setData(
         articles.map((article) => ({
           seller_add: article[1],
@@ -33,15 +45,33 @@ const getArticle = () => {
     }
   };
 
+  const getBalance = async () => {
+    const bal = await web3.eth.getBalance(add);
+    const to_ether = web3.utils.fromWei(bal, "ether");
+    setBalance(to_ether);
+    // window.location.reload();
+    return to_ether;
+  };
+  getBalance()
   useEffect(() => {
     getArticleFunc();
-  }, [get_data]);
+    
+  }, [get_data, balance]);
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <>
       <section className="bg-gray-50 dark:bg-gray-900 my-10 sm:p-5">
+        <section className="flex justify-evenly items-center m-5 ">
+          <div className="w-full flex flex-row items-center justify-start">
+            <h1 className="font-bold  text-2xl">Articles for Sale</h1>
+          </div>
+          <div className="w-25">
+            <p><span>Your Address</span> : {add}</p>
+            <p><span>Your Balance</span> : {balance} (ETH)</p>
+          </div>
+        </section>
         <div className="mx-auto max-w-screen-xl px-4 lg:px-12">
           <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
@@ -69,38 +99,41 @@ const getArticle = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data.map((article) => (
-                    <tr className="border-b dark:border-gray-700">
-                      <th
-                        scope="row"
-                        className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                      >
-                        {article.name}
-                      </th>
-                      <td className="px-4 py-3">{article.desc}</td>
-                      <td className="px-4 py-3">{article.price} (ETH)</td>
-                      <td className="px-4 py-3">{article.seller_add}</td>
-                      {article.buyer_add ===
-                      "0x0000000000000000000000000000000000000000" ? (
-                        <td className="px-4 py-3">No Buyer yet</td>
-                      ) : (
-                        <td className="px-4 py-3">{article.buyer_add}</td>
-                      )}
-                      <td className="px-4 py-3 flex items-center justify-start">
+                  {data
+                    .filter((index) => index.seller_add !== add)
+                    .map((article) => (
+                      <tr className="border-b dark:border-gray-700">
+                        <th
+                          scope="row"
+                          className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          {article.name}
+                        </th>
+                        <td className="px-4 py-3">{article.desc}</td>
+                        <td className="px-4 py-3">{article.price} (ETH)</td>
+                        <td className="px-4 py-3">{article.seller_add}</td>
                         {article.buyer_add ===
                         "0x0000000000000000000000000000000000000000" ? (
-                          <button
-                            className="text-white bg-primary-600  hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                            type="button"
-                          >
-                            Buy
-                          </button>
+                          <td className="px-4 py-3">No Buyer yet</td>
                         ) : (
-                          <p>No action</p>
+                          <td className="px-4 py-3">{article.buyer_add}</td>
                         )}
-                      </td>
-                    </tr>
-                  ))}
+                        <td className="px-4 py-3 flex items-center justify-start">
+                          {article.buyer_add ===
+                          "0x0000000000000000000000000000000000000000" ? (
+                            <button
+                              className="text-white bg-primary-600  hover:bg-blue-500 ease-in-out 
+            duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                              type="button"
+                            >
+                              Buy
+                            </button>
+                          ) : (
+                            <p>No action</p>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
@@ -124,7 +157,8 @@ const getArticle = () => {
                 <li>
                   <a
                     href="#"
-                    className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 
+                    hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
                     <span className="sr-only">Previous</span>
                     <svg
@@ -145,7 +179,10 @@ const getArticle = () => {
                 <li>
                   <a
                     href="#"
-                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight 
+                    text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 
+                    hover:text-gray-700 
+                    dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
                     1
                   </a>
@@ -153,7 +190,9 @@ const getArticle = () => {
                 <li>
                   <a
                     href="#"
-                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight 
+                    text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 
+                    hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
                     2
                   </a>
@@ -170,7 +209,9 @@ const getArticle = () => {
                 <li>
                   <a
                     href="#"
-                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight 
+                    text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 
+                    hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
                     ...
                   </a>
@@ -178,7 +219,8 @@ const getArticle = () => {
                 <li>
                   <a
                     href="#"
-                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    className="flex items-center justify-center text-sm py-2 px-3 leading-tight 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 
+                    hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
                   >
                     100
                   </a>

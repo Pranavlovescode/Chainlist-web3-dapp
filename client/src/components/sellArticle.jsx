@@ -1,9 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { DataContext } from "../context/DataContext";
 import Web3 from "web3";
+import { useNavigate,useLocation } from "react-router-dom";
+
 
 const Test = () => {
-
+ 
+  const navigate = useNavigate();
+  const location = useLocation();
+  const id = location.pathname.split('/')[1];
   const web3 = new Web3('http://localhost:8545');
   const data = useContext(DataContext);
   const [sellData, setSellData] = useState({
@@ -11,10 +16,10 @@ const Test = () => {
     desc: null,
     price: null,
   });
-  console.log(data);
+  // console.log(data);
+  
   const writeData = async () => {
-    const acc = await web3.eth.getAccounts();
-    console.log(acc[3]);
+    // const acc = await web3.eth.getAccounts();
     setSellData({
       name_of_article: document.getElementById("name").value,
       desc: document.getElementById("desc").value,
@@ -32,12 +37,13 @@ const Test = () => {
         web3.utils.toWei(sellData.price, "ether")
       )
       .send({
-        from: acc[3],
+        from: id,
         gas: 5000000,
       });
     // setState({ contract: data, web3: web3 });
     alert("Article has been sold successfully");
     window.location.reload();
+    navigate('/')
     console.log(result);
   };
   return (

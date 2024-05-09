@@ -252,7 +252,7 @@ const getArticle = () => {
         </div>
       </section>
       <div className="flex justify-center">
-        <Link to="/sell-article">
+        <Link to={`/${add}/sell-article`}>
           <button className="text-white bg-primary-600 hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
             Sell an Article
           </button>

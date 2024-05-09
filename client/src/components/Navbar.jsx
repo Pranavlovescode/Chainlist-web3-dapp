@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { Link,useLocation } from "react-router-dom";
 import Web3 from "web3";
+const pp = '../assets/profile-picture-5.jpg'
 const Navbar = () => {
   const location = useLocation();
   const id = location.pathname.split('/')[1]; // split the URL by '/' and get the second part

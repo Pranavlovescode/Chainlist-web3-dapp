@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import Web3 from "web3";
 import { DataContext } from "./context/DataContext";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import SellArticle from "./components/sellArticle";
 import GetArticle from "./components/getArticle";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import ChainList from "./contracts/ChainList.json";
+import LandingPage from "./components/LandingPage";
 
 function App() {
   const web3 = new Web3("http://localhost:8545");
@@ -49,7 +50,7 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path="/:id/sell-article" element={<SellArticle />} />
-          <Route path="/" element={<GetArticle />} />          
+          <Route path={`/`} element={<LandingPage />} />          
           <Route path='/:id' element={<GetArticle />} />
         </Routes>
       </Router>

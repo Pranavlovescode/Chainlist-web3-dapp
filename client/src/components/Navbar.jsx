@@ -7,7 +7,7 @@ const Navbar = () => {
   const location = useLocation();
   const id = location.pathname.split('/')[1]; // split the URL by '/' and get the second part
   // console.log(id);
-  const web3 = new Web3("http://localhost:8545");
+  const web3 = new Web3("https://linea-sepolia.public.blastapi.io");
   const [acc, setAcc] = useState([]);
   const [acc1, setAcc1] = useState([]);
   const getAllAccounts = async () => {

@@ -1,4 +1,4 @@
-const HDWalletProvider = require("truffle-hdwallet-provider");
+const HDWalletProvider = require('@truffle/hdwallet-provider');
 require('dotenv').config();
 
 module.exports = {
@@ -21,6 +21,14 @@ module.exports = {
       network_id:"*",
       gas: 4500000,
       gasPrice: 10000000000 
+    },
+    linea:{
+      provider: ()=>{
+        return new HDWalletProvider(process.env.MNEMONIC,'https://linea-sepolia.public.blastapi.io')
+      },
+      network_id:"*",
+      gas: 4500000,
+      gasPrice: 100000000 
     }
   },
   mocha: {},

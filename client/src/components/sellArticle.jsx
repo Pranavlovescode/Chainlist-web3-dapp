@@ -9,7 +9,7 @@ const Test = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const id = location.pathname.split('/')[1];
-  const web3 = new Web3('http://localhost:8545');
+  const web3 = new Web3('https://linea-sepolia.public.blastapi.io');
   const data = useContext(DataContext);
   const [sellData, setSellData] = useState({
     name_of_article: null,
@@ -19,13 +19,7 @@ const Test = () => {
   // console.log(data);
   
   const writeData = async () => {
-    // const acc = await web3.eth.getAccounts();
     
-    // const json_data = JSON.stringify(sellData);
-    // fs.appendFile('json_data.json', json_data + '\n', (err) => {
-    //   if (err) throw err;
-    //   console.log('The "data to append" was appended to file!');
-    // });
     const result = await data.methods
       .sellArticle(
         sellData.name_of_article,

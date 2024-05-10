@@ -8,7 +8,7 @@ const getArticle = () => {
   const location = useLocation();
   const add = location.pathname.split("/")[1];
   // console.log(id);
-  const web3 = new Web3("http://localhost:8545");
+  const web3 = new Web3("https://linea-sepolia.public.blastapi.io");
   // console.log("DataContext", get_data);
   const [data, setData] = useState([]);
   const [balance, setBalance] = useState(0);

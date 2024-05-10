@@ -43,7 +43,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -79,7 +80,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -92,7 +94,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -125,7 +128,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -138,7 +142,8 @@
       "name": "buyArticle",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"articles\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"buyer\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"description\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"buyArticle\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getArticle\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"_seller\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_buyer\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_description\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getArticlesForSale\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getNumberOfArticles\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_description\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_price\",\"type\":\"uint256\"}],\"name\":\"sellArticle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/ChainList.sol\":\"ChainList\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/ChainList.sol\":{\"keccak256\":\"0x70bbb1955f30afbf2ae307e87685158c85dec948beb2bb0de10c5688a25d923e\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://3045915ea27821992acfad105fb19cf95e802db765828f9ea728150b8ce5a5d8\",\"dweb:/ipfs/QmYyos5SZWEDgGf9uyNN3ev67g2U6cDZ4AXTgdzYfkL97N\"]}},\"version\":1}",
@@ -13198,6 +13203,18 @@
       "address": "0x849A1Ea12FFF333EE83dB57Ec121A3CE0771DecC",
       "transactionHash": "0xcc945a90ec253ffbb6b7f7aee7aa177fbb562925518721ebfa463ed36f353ed0"
     },
+    "59141": {
+      "events": {},
+      "links": {},
+      "address": "0x5392555a9aaB6a7c3D5eCE499Ce3aAf783A7155A",
+      "transactionHash": "0x43dd9c08bd2e35a61a21ad6b8ce1a3a7afdbb2833b374d88584ca500abf020b0"
+    },
+    "11155111": {
+      "events": {},
+      "links": {},
+      "address": "0x9A521FabD4A2DbcF685b10f027B7822ac2B7e4c9",
+      "transactionHash": "0x1bef996dd236e3c176ec0ab3719d7e1de9a7c872bcfd856cc5ce8dd6337b1758"
+    },
     "1714985605720": {
       "events": {},
       "links": {},
@@ -13206,7 +13223,8 @@
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-05-10T08:34:43.035Z",
+  "updatedAt": "2024-05-10T12:34:01.884Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

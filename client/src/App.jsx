@@ -10,10 +10,9 @@ import ChainList from "./contracts/ChainList.json";
 import LandingPage from "./components/LandingPage";
 
 function App() {
-  const web3 = new Web3("http://localhost:8545");
+  const web3 = new Web3(`https://sepolia.infura.io/v3/${import.meta.env.VITE_INFURA_API_KEY}`);
   const [state, setState] = useState({ contract: null, web3: null });
   const [acc, setAcc] = useState([]);
-
   const getAllAccounts = async () => {
     const accounts = await web3.eth.getAccounts();
     setAcc(accounts);

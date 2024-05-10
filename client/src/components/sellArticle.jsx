@@ -8,8 +8,8 @@ const Test = () => {
  
   const navigate = useNavigate();
   const location = useLocation();
-  const id = location.pathname.split('/')[1];
-  const web3 = new Web3('https://linea-sepolia.public.blastapi.io');
+  const id = location.pathname.split('/')[1];  
+  const web3 = new Web3(window.ethereum);
   const data = useContext(DataContext);
   const [sellData, setSellData] = useState({
     name_of_article: null,

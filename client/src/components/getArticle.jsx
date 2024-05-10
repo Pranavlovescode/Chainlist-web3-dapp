@@ -7,8 +7,8 @@ const getArticle = () => {
   const get_data = useContext(DataContext);
   const location = useLocation();
   const add = location.pathname.split("/")[1];
-  // console.log(id);
-  const web3 = new Web3("https://linea-sepolia.public.blastapi.io");
+  // console.log(add);
+  const web3 = new Web3(window.ethereum);
   // console.log("DataContext", get_data);
   const [data, setData] = useState([]);
   const [balance, setBalance] = useState(0);
@@ -132,25 +132,25 @@ const getArticle = () => {
                         </th>
                         <td className="px-4 py-3">{article.desc}</td>
                         <td className="px-4 py-3">{article.price} (ETH)</td>
-                        {article.seller_add === add ? (
+                        {article.seller_add.toLowerCase() === add.toLowerCase() ? (
                           <td className="px-4 py-3">You</td>
                         ) : (
-                          <td className="px-4 py-3">{article.seller_add}</td>
+                          <td className="px-4 py-3">{article.seller_add.toLowerCase()}</td>
                         )}
-                        {article.buyer_add === add ? (
+                        {article.buyer_add.toLowerCase() === add.toLowerCase() ? (
                           <td className="px-4 py-3">You</td>
-                        ) : article.buyer_add ===
+                        ) : article.buyer_add.toLowerCase() ===
                           "0x0000000000000000000000000000000000000000" ? (
                           <td className="px-4 py-3">No Buyer yet</td>
                         ) : (
-                          <td className="px-4 py-3">{article.buyer_add}</td>
+                          <td className="px-4 py-3">{article.buyer_add.toLowerCase()}</td>
                         )}
 
                         <td className="px-4 py-3 flex items-center justify-start">
-                          {article.buyer_add !==
+                          {article.buyer_add.toLowerCase() !==
                           "0x0000000000000000000000000000000000000000" ? (
                             <p>No action</p>
-                          ) : article.seller_add === add ? (
+                          ) : article.seller_add.toLowerCase() === add.toLowerCase() ? (
                             <p>You cannot buy this Article</p>
                           ) : (
                             <button

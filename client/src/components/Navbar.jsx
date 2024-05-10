@@ -10,13 +10,24 @@ const Navbar = () => {
   const web3 = new Web3("https://linea-sepolia.public.blastapi.io");
   const [acc, setAcc] = useState([]);
   const [acc1, setAcc1] = useState([]);
-  const getAllAccounts = async () => {
-    const accounts = await web3.eth.getAccounts();
-    setAcc(accounts);
+  const getMetaMaskAccounts = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
+        });
+        // console.log(accounts);
+        setAcc(accounts);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log("MetaMask is not installed");
+    }
   };
   
   useEffect(() => {
-    getAllAccounts();
+    getMetaMaskAccounts();
   }, []);
 
   return (
@@ -46,17 +57,18 @@ const Navbar = () => {
             </button>
             
             <div
-              class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
+              class="hidden z-50 my-4 w-56 text-base list-none bg-white rounded divide-y divide-gray-100
+              shadow dark:bg-gray-700 dark:divide-gray-600"
               id="dropdown"
             >
-              {acc.map((id) => (
+              {acc.map((id,index) => (
                 <div  className="py-3 px-4" key={id}>                   
-                  <Link onClick={()=>setAcc1(id)} to={`/${id}`}>
+                  <Link onClick={()=>setAcc1(id)} to={`/${id.toLowerCase()}`}>
                     <span className="block text-sm font-semibold text-gray-900 dark:text-white">
-                      Ganache
+                      Account {index+1}
                     </span>
                     <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                      {id}
+                      {id.toLowerCase()}
                     </span>
                   </Link>
                 </div>

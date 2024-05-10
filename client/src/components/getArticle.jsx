@@ -121,7 +121,7 @@ const getArticle = () => {
                 </thead>
                 <tbody>
                   {data.map((article, num) => {
-                    console.log(num);
+                    // console.log(num);
                     return (
                       <tr key={num} className="border-b dark:border-gray-700">
                         <th

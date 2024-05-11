@@ -36,9 +36,11 @@ const Navbar = () => {
         <nav className="bg-white border-gray-200 px-4 lg:px-6 dark:bg-gray-800 py-3">
           <div className="flex flex-wrap justify-between items-center">
             <div className="flex justify-start items-center">
+              <Link to={'/'}>
               <span className=" px-3 self-center text-2xl whitespace-nowrap dark:text-white font-bold">
                 ChainList Crypto Market
               </span>
+              </Link>
             </div>
             <button
               type="button"

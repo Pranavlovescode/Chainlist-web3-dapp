@@ -11,7 +11,7 @@ const getArticle = () => {
   const web3 = new Web3(window.ethereum);
   // console.log("DataContext", get_data);
   const [data, setData] = useState([]);
-  const [balance, setBalance] = useState(0);
+  const [balance, setBalance] = useState(null);
   const [recipt, setRecipt] = useState([]);
   // Debugging purposes
   // const filteredData = data.filter((index) => index.sender_add !== id);
@@ -46,17 +46,21 @@ const getArticle = () => {
     }
   };
   const buyArticle = async (id) => {
-    console.log(data[id - 1].price);
-    console.log(add);
-    const transaction = await get_data.methods.buyArticle(id).send({
-      from: add,
-      gas: 5000000,
-      value: web3.utils.toWei(data[id - 1].price, "ether"),
-    });
-    setRecipt(transaction);
-    alert("Article has been bought successfully");
-    console.log(recipt);
-    window.location.reload();
+    try {
+      console.log(data[id - 1].price);
+      console.log(add);
+      const transaction = await get_data.methods.buyArticle(id).send({
+        from: add,
+        gas: 5000000,
+        value: web3.utils.toWei(data[id - 1].price, "ether"),
+      });
+      setRecipt(transaction);
+      alert("Article has been bought successfully");
+      console.log(recipt);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
     // if (data && data.price) {
 
     // } else {
@@ -132,25 +136,32 @@ const getArticle = () => {
                         </th>
                         <td className="px-4 py-3">{article.desc}</td>
                         <td className="px-4 py-3">{article.price} (ETH)</td>
-                        {article.seller_add.toLowerCase() === add.toLowerCase() ? (
+                        {article.seller_add.toLowerCase() ===
+                        add.toLowerCase() ? (
                           <td className="px-4 py-3">You</td>
                         ) : (
-                          <td className="px-4 py-3">{article.seller_add.toLowerCase()}</td>
+                          <td className="px-4 py-3">
+                            {article.seller_add.toLowerCase()}
+                          </td>
                         )}
-                        {article.buyer_add.toLowerCase() === add.toLowerCase() ? (
+                        {article.buyer_add.toLowerCase() ===
+                        add.toLowerCase() ? (
                           <td className="px-4 py-3">You</td>
                         ) : article.buyer_add.toLowerCase() ===
                           "0x0000000000000000000000000000000000000000" ? (
                           <td className="px-4 py-3">No Buyer yet</td>
                         ) : (
-                          <td className="px-4 py-3">{article.buyer_add.toLowerCase()}</td>
+                          <td className="px-4 py-3">
+                            {article.buyer_add.toLowerCase()}
+                          </td>
                         )}
 
                         <td className="px-4 py-3 flex items-center justify-start">
                           {article.buyer_add.toLowerCase() !==
                           "0x0000000000000000000000000000000000000000" ? (
                             <p>No action</p>
-                          ) : article.seller_add.toLowerCase() === add.toLowerCase() ? (
+                          ) : article.seller_add.toLowerCase() ===
+                            add.toLowerCase() ? (
                             <p>You cannot buy this Article</p>
                           ) : (
                             <button
@@ -284,11 +295,31 @@ const getArticle = () => {
         </div>
       </section>
       <div className="flex justify-center">
-        <Link to={`/${add}/sell-article`}>
-          <button className="text-white bg-primary-600 hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-            Sell an Article
-          </button>
-        </Link>
+        {balance == 0 ? (
+          <div
+            id="alert-2"
+            class="flex items-center p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+            role="alert"
+          >
+            <svg
+              class="flex-shrink-0 w-4 h-4"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div class="ms-3 text-sm font-medium">Insufficient Balance</div>
+          </div>
+        ) : (
+          <Link to={`/${add}/sell-article`}>
+            <button className="text-white bg-primary-600 hover:bg-blue-500 ease-in-out duration-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+              Sell an Article
+            </button>
+          </Link>
+        )}
       </div>
     </>
   );

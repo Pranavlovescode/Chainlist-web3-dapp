@@ -12,27 +12,7 @@ import LandingPage from "./components/LandingPage";
 function App() {
   const web3 = new Web3(window.ethereum);
   const [state, setState] = useState({ contract: null, web3: null });
-  // const [acc, setAcc] = useState([]);
-  // const getAllAccounts = async () => {
-  //   const accounts = await web3.eth.getAccounts();
-  //   setAcc(accounts);
-  // };
-  // console.log(acc);
-  // const getMetaMaskAccounts = async () => {
-  //   if (window.ethereum) {
-  //     try {
-  //       const accounts = await window.ethereum.request({
-  //         method: "eth_requestAccounts",
-  //       });
-  //       // console.log(accounts);
-  //       setAcc(accounts);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   } else {
-  //     console.log("MetaMask is not installed");
-  //   }
-  // };
+
   useEffect(() => {
     const funcInteract = async () => {
       try {

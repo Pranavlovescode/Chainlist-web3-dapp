@@ -7,7 +7,7 @@ const Navbar = () => {
   const location = useLocation();
   const id = location.pathname.split('/')[1]; // split the URL by '/' and get the second part
   // console.log(id);
-  const web3 = new Web3("https://linea-sepolia.public.blastapi.io");
+  const web3 = new Web3();
   const [acc, setAcc] = useState([]);
   const [acc1, setAcc1] = useState([]);
   const getMetaMaskAccounts = async () => {
@@ -27,7 +27,7 @@ const Navbar = () => {
   };
   
   useEffect(() => {
-    getMetaMaskAccounts();
+    // getMetaMaskAccounts();
   }, []);
 
   return (
@@ -43,6 +43,7 @@ const Navbar = () => {
               </Link>
             </div>
             <button
+              onClick={getMetaMaskAccounts}
               type="button"
               class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
               id="user-menu-button"
